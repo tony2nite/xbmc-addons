@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="xbmc-plugins" default="build-repository" basedir=".">
+
+	<property name="project-name" value="${ant.project.name}" />
+	<property name="repo-folder" value="repo" />
+	
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+	  <classpath>
+	    <pathelement location="build/ant-contrib-1.0b3.jar"/>
+	  </classpath>
+	</taskdef>	
+	
+	<target name="clean">
+		<delete dir="${repo-folder}" />
+	</target>
+	
+	<target name="build-repository" depends="clean">
+		<exec dir="." executable="python" failonerror="true">
+    		<arg line="addons_xml_generator.py" />
+		</exec>
+		<move file="addons.xml" tofile="${repo-folder}/addons.xml"/>
+		<move file="addons.xml.md5" tofile="${repo-folder}/addons.xml.md5"/>
+		
+		<antcall target="zip_all_repository_addons"></antcall>
+	</target>
+	
+	<target name="zip_all_repository_addons" description="Parses out all the files from the directory">
+		<foreach target="zip_addon" param="file_path">
+			<path>
+				<dirset dir=".">
+					<include name="*plugin*"/>
+				</dirset>
+			</path>
+		</foreach>
+	</target>
+
+	<target name="zip_addon">
+		<basename property="folder" file="${file_path}"/>
+		<echo>Zipping ${folder} repository</echo>
+		<mkdir dir="${repo-folder}/${folder}"/>
+		<zip destfile="${repo-folder}/${folder}/${folder}.zip" basedir="${file_path}"/>
+		<copy file="${folder}/changelog.txt" tofile="${repo-folder}/${folder}/changelog.txt"/>
+	</target>
+</project>
