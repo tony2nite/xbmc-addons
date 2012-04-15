@@ -2,6 +2,7 @@
 <project name="xbmc-plugins" default="build-repository" basedir=".">
 
 	<property name="project-name" value="${ant.project.name}" />
+	<property name="provider-name" value="tony2nite" />
 	<property name="repo-folder" value="repo" />
 	
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
@@ -10,35 +11,68 @@
 	  </classpath>
 	</taskdef>	
 	
+	<taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask">
+	  <classpath>
+	    <pathelement location="build/xmltask.jar"/>
+	  </classpath>
+	</taskdef>	
+	
 	<target name="clean">
 		<delete dir="${repo-folder}" />
 	</target>
 	
 	<target name="build-repository" depends="clean">
-		<exec dir="." executable="python" failonerror="true">
-    		<arg line="addons_xml_generator.py" />
-		</exec>
-		<move file="addons.xml" tofile="${repo-folder}/addons.xml"/>
-		<move file="addons.xml.md5" tofile="${repo-folder}/addons.xml.md5"/>
-		
-		<antcall target="zip_all_repository_addons"></antcall>
+		<antcall target="create_addons_for_repo"></antcall>
+		<antcall target="create_repo"></antcall>
 	</target>
 	
-	<target name="zip_all_repository_addons" description="Parses out all the files from the directory">
-		<foreach target="zip_addon" param="file_path">
+	<target name="create_addons_for_repo" description="Parses out all the files from the directory">
+		<foreach target="create_addon" param="file_path">
 			<path>
 				<dirset dir=".">
 					<include name="*plugin*"/>
+					<include name="*script*"/>
 				</dirset>
 			</path>
 		</foreach>
 	</target>
 
-	<target name="zip_addon">
+	<target name="create_addon">
 		<basename property="folder" file="${file_path}"/>
-		<echo>Zipping ${folder} repository</echo>
+	    <!-- get addon version -->
+		<xmltask source="${folder}/addon.xml">
+		   <copy path="/addon/@version" attrValue="true" property="version"/>
+		</xmltask>
+	   	<property name="version" value="${version}"/>
+
+		<echo>Preparing ${folder} repository (${version})</echo>
 		<mkdir dir="${repo-folder}/${folder}"/>
-		<zip destfile="${repo-folder}/${folder}/${folder}.zip" basedir="${file_path}"/>
-		<copy file="${folder}/changelog.txt" tofile="${repo-folder}/${folder}/changelog.txt"/>
+		<zip destfile="${repo-folder}/${folder}/${folder}-${version}.zip" basedir="${file_path}"/>
+		<copy file="${folder}/changelog.txt" tofile="${repo-folder}/${folder}/changelog-${version}.txt"/>
 	</target>
+	
+	<target name="create_repo">
+		<!-- prepare checksum etc -->
+		<exec dir="." executable="python" failonerror="true">
+    		<arg line="addons_xml_generator.py" />
+		</exec>
+		<move file="addons.xml" tofile="${repo-folder}/addons.xml"/>
+		<move file="addons.xml.md5" tofile="${repo-folder}/addons.xml.md5"/>
+
+	    <!-- get addon version -->
+		<xmltask source="addon.xml">
+		   <copy path="/addon/@version" attrValue="true" property="version"/>
+		</xmltask>
+	   	<property name="version" value="${version}"/>
+
+		<echo>Preparing repository (${version})</echo>
+		<zip destfile="${repo-folder}/repository.${provider-name}.addons-${version}.zip">
+			<fileset file="changelog.txt"/>
+			<fileset file="addon.xml"/>
+		</zip>
+	</target>
+	
+	<target name="get_addon_version">
+		<basename property="folder" file="${file_path}"/>
+ 	</target>
 </project>

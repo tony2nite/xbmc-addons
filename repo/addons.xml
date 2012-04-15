@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addons>
 <addon id="plugin.video.tplus" version="0.0.1" name="Tube+" provider-name="tony2nite">
     <requires>
         <import addon="xbmc.python" version="1.0"/>
@@ -15,3 +16,15 @@
     </extension>
 </addon>
 
+<addon id="script.module.urlresolver" name="urlresolver" version="0.0.2" provider-name="t0mm0 (inspired by unbehagan, anarchintosh)">
+  <requires>
+    <import addon="xbmc.python" version="1.0" />
+    <import addon="script.module.t0mm0.common" version="0.0.1"/>
+    <import addon="plugin.video.youtube"/>
+  </requires>
+  <extension point="xbmc.python.module" library="lib" />
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+  </extension>
+</addon>
+</addons>
