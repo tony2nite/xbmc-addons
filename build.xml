@@ -48,7 +48,7 @@
 
 		<echo>Preparing ${folder} (${version})</echo>
 		<mkdir dir="${repo-target-folder}/${folder}" />
-		<zip destfile="${repo-target-folder}/${folder}/${folder}-${version}.zip" level="9" encoding="UTF8">
+		<zip destfile="${repo-target-folder}/${folder}/${folder}-${version}.zip">
 			<zipfileset dir="${file_path}" prefix="${folder}" />
 		</zip>
 		<copy file="${folder}/changelog.txt" tofile="${repo-target-folder}/${folder}/changelog-${version}.txt" />
@@ -69,11 +69,9 @@
 		</xmltask>
 
 		<echo>Preparing repository (${version})</echo>
-		<exec executable="zip">
-		    <arg value="-r"/>
-			<arg value="repository.${provider-name}.addons-${version}.zip" />
-			<arg value="repository.${provider-name}.addons" />
-		</exec>
+		<zip destfile="${repo-target-folder}/repository.${provider-name}-${version}.zip">
+			<zipfileset dir="repository.${provider-name}.addons" prefix="repository.${provider-name}.addons" />
+		</zip>
 	</target>
 
 	<target name="get_addon_version">

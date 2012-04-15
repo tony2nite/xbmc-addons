@@ -3,7 +3,6 @@
 		name="tony2nite's repo"
 		version="0.0.1"
 		provider-name="tony2nite">
-		
 	<extension
 			point="xbmc.addon.repository"
 			name="tony2nite's repo">
