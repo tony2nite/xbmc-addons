@@ -4,75 +4,79 @@
 	<property name="project-name" value="${ant.project.name}" />
 	<property name="provider-name" value="tony2nite" />
 	<property name="repo-target-folder" value="repo" />
-	
+
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
-	  <classpath>
-	    <pathelement location="build/ant-contrib-1.0b3.jar"/>
-	  </classpath>
-	</taskdef>	
-	
+		<classpath>
+			<pathelement location="build/ant-contrib-1.0b3.jar" />
+		</classpath>
+	</taskdef>
+
 	<taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask">
-	  <classpath>
-	    <pathelement location="build/xmltask.jar"/>
-	  </classpath>
-	</taskdef>	
-	
+		<classpath>
+			<pathelement location="build/xmltask.jar" />
+		</classpath>
+	</taskdef>
+
 	<target name="clean">
 		<delete dir="${repo-target-folder}" />
 	</target>
-	
+
 	<target name="build-repository" depends="clean">
-		<antcall target="create_addons_for_repo"></antcall>
-		<antcall target="create_repo"></antcall>
+		<antcall target="create_addons_for_repo">
+		</antcall>
+		<antcall target="create_repo">
+		</antcall>
 	</target>
-	
+
 	<target name="create_addons_for_repo" description="Parses out all the files from the directory">
 		<foreach target="create_addon" param="file_path">
 			<path>
 				<dirset dir=".">
-					<include name="*plugin*"/>
-					<include name="*script*"/>
+					<include name="*plugin*" />
+					<include name="*script*" />
 				</dirset>
 			</path>
 		</foreach>
 	</target>
 
 	<target name="create_addon">
-		<basename property="folder" file="${file_path}"/>
-	    <!-- get addon version -->
+		<basename property="folder" file="${file_path}" />
+		<!-- get addon version -->
 		<xmltask source="${folder}/addon.xml">
-		   <copy path="/addon/@version" attrValue="true" property="version"/>
+			<copy path="/addon/@version" attrValue="true" property="version" />
 		</xmltask>
 
-		<echo>Preparing ${folder} repository (${version})</echo>
-		<mkdir dir="${repo-target-folder}/${folder}"/>
-		<zip destfile="${repo-target-folder}/${folder}/${folder}-${version}.zip">
-			<zipfileset dir="${file_path}" prefix="${folder}"/>
+		<echo>Preparing ${folder} (${version})</echo>
+		<mkdir dir="${repo-target-folder}/${folder}" />
+		<zip destfile="${repo-target-folder}/${folder}/${folder}-${version}.zip" level="9" encoding="UTF8">
+			<zipfileset dir="${file_path}" prefix="${folder}" />
 		</zip>
-		<copy file="${folder}/changelog.txt" tofile="${repo-target-folder}/${folder}/changelog-${version}.txt"/>
+		<copy file="${folder}/changelog.txt" tofile="${repo-target-folder}/${folder}/changelog-${version}.txt" />
 	</target>
-	
+
 	<target name="create_repo">
 		<!-- prepare checksum etc -->
 		<exec dir="." executable="python" failonerror="true">
-    		<arg line="addons_xml_generator.py" />
+			<arg line="addons_xml_generator.py" />
 		</exec>
-		<move file="addons.xml" tofile="${repo-target-folder}/addons.xml"/>
-		<move file="addons.xml.md5" tofile="${repo-target-folder}/addons.xml.md5"/>
+		<move file="addons.xml" tofile="${repo-target-folder}/addons.xml" />
+		<move file="addons.xml.md5" tofile="${repo-target-folder}/addons.xml.md5" />
 
-	    <!-- get addon version -->
-		<property name="repo-source-folder" value="repository.${provider-name}.addons"/>
+		<!-- get addon version -->
+		<property name="repo-source-folder" value="repository.${provider-name}.addons" />
 		<xmltask source="${repo-source-folder}/addon.xml">
-		   <copy path="/addon/@version" attrValue="true" property="version"/>
+			<copy path="/addon/@version" attrValue="true" property="version" />
 		</xmltask>
 
 		<echo>Preparing repository (${version})</echo>
-		<zip destfile="${repo-target-folder}/repository.${provider-name}.addons-${version}.zip">
-			 <zipfileset dir="${repo-source-folder}" prefix="repository.${provider-name}.addons"/>
-		</zip>
+		<exec executable="zip">
+		    <arg value="-r"/>
+			<arg value="repository.${provider-name}.addons-${version}.zip" />
+			<arg value="repository.${provider-name}.addons" />
+		</exec>
 	</target>
-	
+
 	<target name="get_addon_version">
-		<basename property="folder" file="${file_path}"/>
- 	</target>
+		<basename property="folder" file="${file_path}" />
+	</target>
 </project>

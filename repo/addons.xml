@@ -16,26 +16,6 @@
     </extension>
 </addon>
 
-<addon	id="repository.tony2nite.addons"
-		name="tony2nite's repo"
-		version="0.0.1"
-		provider-name="tony2nite">
-
-	<extension
-			point="xbmc.addon.repository"
-			name="tony2nite's repo">
-		<info compressed="false">https://github.com/tony2nite/xbmc-addons/raw/master/repo/addons.xml</info>
-		<checksum>https://github.com/tony2nite/xbmc-addons/raw/master/repo/addons.xml.md5</checksum>
-		<datadir zip="true">https://github.com/tony2nite/xbmc-addons/raw/master/repo/</datadir>
-	</extension>
-	<extension point="xbmc.addon.metadata">
-		<summary>Install tony2nite's repo</summary>
-		<description>Download and install tony2nite's repo</description>
-		<disclaimer></disclaimer>
-		<platform>all</platform>
-	</extension>
-</addon>
-
 <addon id="script.module.urlresolver" name="urlresolver" version="0.0.2" provider-name="t0mm0 (inspired by unbehagan, anarchintosh)">
   <requires>
     <import addon="xbmc.python" version="1.0" />
