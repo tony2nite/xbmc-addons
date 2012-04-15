@@ -3,9 +3,11 @@
 		name="tony2nite's repo"
 		version="0.0.1"
 		provider-name="tony2nite">
-	<extension	point="xbmc.addon.repository"
-				name="tony2nite's repo">
-		<info compressed="false">https://github.com/tony2nite/xbmc-addons/raw/master/addons.xml</info>
+		
+	<extension
+			point="xbmc.addon.repository"
+			name="tony2nite's repo">
+		<info compressed="false">https://github.com/tony2nite/xbmc-addons/raw/master/repo/addons.xml</info>
 		<checksum>https://github.com/tony2nite/xbmc-addons/raw/master/repo/addons.xml.md5</checksum>
 		<datadir zip="true">https://github.com/tony2nite/xbmc-addons/raw/master/repo/</datadir>
 	</extension>
@@ -16,3 +18,4 @@
 		<platform>all</platform>
 	</extension>
 </addon>
+

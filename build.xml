@@ -3,7 +3,7 @@
 
 	<property name="project-name" value="${ant.project.name}" />
 	<property name="provider-name" value="tony2nite" />
-	<property name="repo-folder" value="repo" />
+	<property name="repo-target-folder" value="repo" />
 	
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 	  <classpath>
@@ -18,7 +18,7 @@
 	</taskdef>	
 	
 	<target name="clean">
-		<delete dir="${repo-folder}" />
+		<delete dir="${repo-target-folder}" />
 	</target>
 	
 	<target name="build-repository" depends="clean">
@@ -43,12 +43,13 @@
 		<xmltask source="${folder}/addon.xml">
 		   <copy path="/addon/@version" attrValue="true" property="version"/>
 		</xmltask>
-	   	<property name="version" value="${version}"/>
 
 		<echo>Preparing ${folder} repository (${version})</echo>
-		<mkdir dir="${repo-folder}/${folder}"/>
-		<zip destfile="${repo-folder}/${folder}/${folder}-${version}.zip" basedir="${file_path}"/>
-		<copy file="${folder}/changelog.txt" tofile="${repo-folder}/${folder}/changelog-${version}.txt"/>
+		<mkdir dir="${repo-target-folder}/${folder}"/>
+		<zip destfile="${repo-target-folder}/${folder}/${folder}-${version}.zip">
+			<zipfileset dir="${file_path}" prefix="${folder}"/>
+		</zip>
+		<copy file="${folder}/changelog.txt" tofile="${repo-target-folder}/${folder}/changelog-${version}.txt"/>
 	</target>
 	
 	<target name="create_repo">
@@ -56,19 +57,18 @@
 		<exec dir="." executable="python" failonerror="true">
     		<arg line="addons_xml_generator.py" />
 		</exec>
-		<move file="addons.xml" tofile="${repo-folder}/addons.xml"/>
-		<move file="addons.xml.md5" tofile="${repo-folder}/addons.xml.md5"/>
+		<move file="addons.xml" tofile="${repo-target-folder}/addons.xml"/>
+		<move file="addons.xml.md5" tofile="${repo-target-folder}/addons.xml.md5"/>
 
 	    <!-- get addon version -->
-		<xmltask source="addon.xml">
+		<property name="repo-source-folder" value="repository.${provider-name}.addons"/>
+		<xmltask source="${repo-source-folder}/addon.xml">
 		   <copy path="/addon/@version" attrValue="true" property="version"/>
 		</xmltask>
-	   	<property name="version" value="${version}"/>
 
 		<echo>Preparing repository (${version})</echo>
-		<zip destfile="${repo-folder}/repository.${provider-name}.addons-${version}.zip">
-			<fileset file="changelog.txt"/>
-			<fileset file="addon.xml"/>
+		<zip destfile="${repo-target-folder}/repository.${provider-name}.addons-${version}.zip">
+			 <zipfileset dir="${repo-source-folder}" prefix="repository.${provider-name}.addons"/>
 		</zip>
 	</target>
 	
