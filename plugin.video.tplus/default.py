@@ -218,7 +218,6 @@ elif mode == 'movie':
                               'rating': float(quality),
                               'studio': host},
                               img=addon.queries['imageurl'],
-                              is_playable=True,
                               is_folder=False,
                               item_type='video')
     xbmcplugin.setContent( int( sys.argv[ 1 ] ), 'movies') 
@@ -229,8 +228,8 @@ elif mode == 'movie':
 
 elif mode == 'main':
 #    addon.show_small_popup('t0mm0 test addon', 'Is now loaded enjoy', 6000, logo)
-    addon.add_directory({'mode': 'tv'}, {'title': 'TUBE+ tv'})
-    addon.add_directory({'mode': 'movies'}, {'title': 'TUBE+ movies'})
+    addon.add_directory({'mode': 'tv'}, {'title': 'TUBE+ TV'})
+    addon.add_directory({'mode': 'movies'}, {'title': 'TUBE+ Movies'})
     addon.add_directory({'mode': 'movies', 'browse': 'latest'}, {'title': 'TUBE+ Movies (Latest Releases)'})
     addon.add_directory({'mode': 'movies', 'browse': 'popular'}, {'title': 'TUBE+ Movies (Popular Categories)'})
     addon.add_directory({'mode': 'resolver_settings'}, {'title': 'Resolver Settings'}, is_folder=False)
