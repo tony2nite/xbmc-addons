@@ -77,7 +77,7 @@ def get_movie_page(url, deep = False):
 				get_movie_page(base_url + url + current_page + "/")
 
  
-addon = Addon('plugin.video.t0mm0.test', sys.argv)
+addon = Addon('plugin.video.tplus', sys.argv)
 net = Net()
 
 

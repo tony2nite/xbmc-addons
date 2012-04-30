@@ -1,0 +1,5 @@
+[B]0.0.1[/B]
+- Rename Addon correctly
+
+[B]0.0.1[/B]
+- Initial version
